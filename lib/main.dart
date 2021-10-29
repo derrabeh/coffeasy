@@ -1,4 +1,4 @@
-import 'package:coffeasy/APP/sign_in/sign_in_page.dart';
+import 'package:coffeasy/APP/landing_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +18,7 @@ class MyApp  extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
       ),
-      home: SignInPage(),
+      home: LandingPage(),
     );
   }
 }
