@@ -6,10 +6,15 @@ import 'package:flutter/material.dart';
 class SignInPage extends StatelessWidget {
   const SignInPage({Key? key, required this.onSignIn}) : super(key: key);
   final void Function(User) onSignIn;
+  //onSignIn is similar to the onPressed functions, eg.:
+  //RaisedButton use onPressed callback to inform the caller that btn is pressed.
+  //SignInPage use onSignIn callback to inform the caller that user has signed in.
+  //onSignIn passes a User object back to the caller to set the State in Landing
 
   Future<void> _signInAnonymously() async{
     try {
       final userCredentials = await FirebaseAuth.instance.signInAnonymously();
+      //^ a user is created here
       onSignIn(userCredentials.user!);
     } catch (e){
       print(e.toString());
