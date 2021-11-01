@@ -1,4 +1,5 @@
 import 'package:coffeasy/APP/landing_page.dart';
+import 'package:coffeasy/services/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +19,11 @@ class MyApp  extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
       ),
-      home: LandingPage(),
+      home: LandingPage(
+        //we can only create instances of non-abstract classes
+        //afterwards, can refer to auth using abstract classes
+        auth: Auth(),
+      ),
     );
   }
 }
