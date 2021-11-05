@@ -1,3 +1,4 @@
+import 'package:coffeasy/APP/sign_in/email_sign_in_page.dart';
 import 'package:coffeasy/APP/sign_in/sign_in_button.dart';
 import 'package:coffeasy/APP/sign_in/social_sign_in_button.dart';
 import 'package:coffeasy/services/auth.dart';
@@ -7,21 +8,30 @@ class SignInPage extends StatelessWidget {
   const SignInPage({Key? key, required this.auth}) : super(key: key);
   final AuthBase auth;
 
-  Future<void> _signInAnonymously() async{
+  Future<void> _signInAnonymously() async {
     try {
       await auth.signInAnonymously();
       //^ a user is created here
-    } catch (e){
+    } catch (e) {
       print(e.toString());
     }
   }
 
-  Future<void> _signInGoogle() async{
+  Future<void> _signInGoogle() async {
     try {
       await auth.signInWithGoogle();
-    } catch (e){
+    } catch (e) {
       print(e.toString());
     }
+  }
+
+  void _signInWithEmail(BuildContext context) {
+    Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (context) => EmailSignInPage(),
+          fullscreenDialog: true,
+        )
+    );
   }
 
   @override
@@ -31,12 +41,12 @@ class SignInPage extends StatelessWidget {
         title: Text('Coffeasy'),
         elevation: 2,
       ),
-      body: _buildContent(),
+      body: _buildContent(context),
       backgroundColor: Colors.grey[200],
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(BuildContext context) {
     //the buildContent is private as it is uniquely created
     //for the sign in page, so it's not reusable and hence
     //is unnecessary to be public.
@@ -79,7 +89,7 @@ class SignInPage extends StatelessWidget {
               text: 'Sign in with email',
               textColor: Colors.white,
               color: Colors.teal,
-              onPressed: () {},
+              onPressed: () => _signInWithEmail(context),
             ),
             SizedBox(height: 8),
             Text(
