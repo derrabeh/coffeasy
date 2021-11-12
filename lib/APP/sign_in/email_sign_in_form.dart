@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:coffeasy/APP/sign_in/validators.dart';
 import 'package:coffeasy/common_widgets/form_submit_button.dart';
+import 'package:coffeasy/common_widgets/show_alert_dialog.dart';
 import 'package:coffeasy/services/auth.dart';
 import 'package:flutter/material.dart';
 
@@ -8,9 +11,10 @@ enum EmailSignInFormType { signIn, register }
 //if you add a forget PW scren, you can do
 //enum EmailSignInFormType { signIn, register, forgotPassword }
 
-class EmaiLSignInForm extends StatefulWidget with EmailAndPasswordValidators{
+class EmaiLSignInForm extends StatefulWidget with EmailAndPasswordValidators {
   EmaiLSignInForm({Key? key, required this.auth}) : super(key: key);
   final AuthBase auth;
+
   @override
   _EmaiLSignInFormState createState() => _EmaiLSignInFormState();
 }
@@ -22,32 +26,55 @@ class _EmaiLSignInFormState extends State<EmaiLSignInForm> {
   final FocusNode _passwordFocusNode = FocusNode();
 
   String get _email => _emailController.text;
+
   String get _password => _passwordController.text;
+
   //default enum value
   EmailSignInFormType _formType = EmailSignInFormType.signIn;
   bool _submitted = false;
 
-  void _submit() async{
+  //prevent user from submitting a few times while waiting for Firebase response
+  bool _isLoading = false;
+
+  void _submit() async {
     //print('email: ${_emailController.text}, password: ${_passwordController.text}');
+    //should only print once if form submission is disabled while waiting for response
+    //print('submit called');
     setState(() {
       _submitted = true;
+      _isLoading = true;
     });
     try {
-      if (_formType == EmailSignInFormType.signIn){
+      //Artificial delay to test disabling multiple form submission while waiting for response
+      //await Future.delayed(Duration(seconds: 3));
+      if (_formType == EmailSignInFormType.signIn) {
         await widget.auth.signInWithEmailAndPassword(_email, _password);
       } else {
         await widget.auth.createUserWithEmailAndPassword(_email, _password);
       }
       Navigator.pop(context);
-    } catch (e){
-      print(e.toString());
+    } catch (e) {
+      //print(e.toString());
+      showAlertDialog(context,
+          title: 'Sign In Failed',
+          content: e.toString(),
+          defaultActionText: 'OK');
+    } finally {
+      //this code is executed regardless of success or failure
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
-  void _emailEditingComplete(){
-    FocusScope.of(context).requestFocus(_passwordFocusNode);
+  //moves focus to password field when user press on 'next' after editing email
+  //if email is invalid, focus stays on email
+  void _emailEditingComplete() {
+    final newFocus = widget.emailValidator.isValid(_email)
+        ? _passwordFocusNode
+        : _emailFocusNode;
+    FocusScope.of(context).requestFocus(newFocus);
   }
-
 
   void _toggleFormType() {
     setState(() {
@@ -68,8 +95,11 @@ class _EmaiLSignInFormState extends State<EmaiLSignInForm> {
         ? 'Need an account? Register'
         : 'Have an account? Sign In';
 
-    bool submitEnabled = widget.emailValidator.isValid(_email) && widget.passwordValidator.isValid(_password);
+    bool submitEnabled = widget.emailValidator.isValid(_email) &&
+        widget.passwordValidator.isValid(_password) &&
+        !_isLoading;
     //bool submitEnabled = _email.isNotEmpty  && _password.isNotEmpty;
+    //!_isLoading ensure form is not enabled while it's loading
 
     return [
       _buildEmailTextField(),
@@ -81,27 +111,29 @@ class _EmaiLSignInFormState extends State<EmaiLSignInForm> {
         height: 8,
       ),
       FormSubmitButton(
-        onPressed: submitEnabled ? _submit : (){},
+        onPressed: submitEnabled ? _submit : () {},
         text: primaryText,
       ),
       SizedBox(
         height: 8,
       ),
       TextButton(
-        onPressed: _toggleFormType,
+        onPressed: !_isLoading ? _toggleFormType : null,
         child: Text(secondaryText),
       ),
     ];
   }
 
   TextField _buildPasswordTextField() {
-    bool showErrorText = _submitted && !widget.passwordValidator.isValid(_password);
+    bool showErrorText =
+        _submitted && !widget.passwordValidator.isValid(_password);
     return TextField(
       controller: _passwordController,
       focusNode: _passwordFocusNode,
       decoration: InputDecoration(
         labelText: 'Password',
         errorText: showErrorText ? widget.invalidPasswordErrorText : null,
+        enabled: _isLoading == false,
       ),
       textInputAction: TextInputAction.done,
       obscureText: true,
@@ -119,6 +151,7 @@ class _EmaiLSignInFormState extends State<EmaiLSignInForm> {
         labelText: 'Email',
         hintText: 'yourEmail@mail.com',
         errorText: showErrorText ? widget.invalidEmailErrorText : null,
+        enabled: _isLoading == false,
       ),
       autocorrect: false,
       keyboardType: TextInputType.emailAddress,
@@ -142,10 +175,9 @@ class _EmaiLSignInFormState extends State<EmaiLSignInForm> {
     );
   }
 
-  _updateState(){
+  _updateState() {
     //everytime u change the pw and email, the console log updates ->
     //print('email: $_email, password: $_password');
-    setState(() {
-    });
+    setState(() {});
   }
 }

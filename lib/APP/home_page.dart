@@ -1,3 +1,4 @@
+import 'package:coffeasy/common_widgets/show_alert_dialog.dart';
 import 'package:coffeasy/services/auth.dart';
 import 'package:flutter/material.dart';
 
@@ -5,11 +6,22 @@ class HomePage extends StatelessWidget {
   const HomePage({Key? key, required this.auth}) : super(key: key);
   final AuthBase auth;
 
-  Future<void> _signOut() async{
+  Future<void> _signOut() async {
     try {
       await auth.signOut();
-    } catch (e){
+    } catch (e) {
       print(e.toString());
+    }
+  }
+
+  Future<void> _confirmSignOut(BuildContext context) async {
+    final didRequestSignOut = await showAlertDialog(context,
+        title: 'Logout',
+        content: 'Are you sure you want to log out?',
+        defaultActionText: 'Logout',
+    ) ?? false;
+    if (didRequestSignOut == true){
+      _signOut();
     }
   }
 
@@ -25,7 +37,7 @@ class HomePage extends StatelessWidget {
         ),
         actions: <Widget>[
           TextButton(
-            onPressed: _signOut,
+            onPressed: () => _confirmSignOut(context),
             child: Text(
               'Log out',
               style: TextStyle(
