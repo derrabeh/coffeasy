@@ -1,8 +1,8 @@
-
 import 'package:coffeasy/APP/sign_in/validators.dart';
 import 'package:coffeasy/common_widgets/form_submit_button.dart';
-import 'package:coffeasy/common_widgets/show_alert_dialog.dart';
+import 'package:coffeasy/common_widgets/show_exception_alert_dialog.dart';
 import 'package:coffeasy/services/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,6 +34,17 @@ class _EmaiLSignInFormState extends State<EmaiLSignInForm> {
   //prevent user from submitting a few times while waiting for Firebase response
   bool _isLoading = false;
 
+  //called when a widget is removed from the widget tree
+  @override
+  void dispose(){
+    //print('dispose called');
+    _emailController.dispose();
+    _passwordController.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    super.dispose();
+  }
+
   void _submit() async {
     //print('email: ${_emailController.text}, password: ${_passwordController.text}');
     //should only print once if form submission is disabled while waiting for response
@@ -52,12 +63,11 @@ class _EmaiLSignInFormState extends State<EmaiLSignInForm> {
         await auth.createUserWithEmailAndPassword(_email, _password);
       }
       Navigator.pop(context);
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
       //print(e.toString());
-      showAlertDialog(context,
+      showExceptionAlertDialog(context,
           title: 'Sign In Failed',
-          content: e.toString(),
-          defaultActionText: 'OK');
+          exception: e);
     } finally {
       //this code is executed regardless of success or failure
       setState(() {
