@@ -2,14 +2,14 @@ import 'package:coffeasy/APP/sign_in/email_sign_in_page.dart';
 import 'package:coffeasy/APP/sign_in/sign_in_button.dart';
 import 'package:coffeasy/APP/sign_in/social_sign_in_button.dart';
 import 'package:coffeasy/services/auth.dart';
+import 'package:coffeasy/services/auth_provider.dart';
 import 'package:flutter/material.dart';
 
 class SignInPage extends StatelessWidget {
-  const SignInPage({Key? key, required this.auth}) : super(key: key);
-  final AuthBase auth;
 
-  Future<void> _signInAnonymously() async {
+  Future<void> _signInAnonymously(BuildContext context) async {
     try {
+      final auth = AuthProvider.of(context);
       await auth.signInAnonymously();
       //^ a user is created here
     } catch (e) {
@@ -17,8 +17,9 @@ class SignInPage extends StatelessWidget {
     }
   }
 
-  Future<void> _signInGoogle() async {
+  Future<void> _signInGoogle(BuildContext context) async {
     try {
+      final auth = AuthProvider.of(context);
       await auth.signInWithGoogle();
     } catch (e) {
       print(e.toString());
@@ -28,7 +29,7 @@ class SignInPage extends StatelessWidget {
   void _signInWithEmail(BuildContext context) {
     Navigator.of(context).push(
         MaterialPageRoute<void>(
-          builder: (context) => EmailSignInPage(auth: auth),
+          builder: (context) => EmailSignInPage(),
           fullscreenDialog: true,
         )
     );
@@ -70,7 +71,7 @@ class SignInPage extends StatelessWidget {
               text: 'Sign in with Google',
               textColor: Colors.black87,
               color: Colors.white,
-              onPressed: _signInGoogle,
+              onPressed: () => _signInGoogle(context),
               assetName: 'images/google-logo.png',
             ),
             SizedBox(
@@ -104,7 +105,7 @@ class SignInPage extends StatelessWidget {
               text: 'Go anonymous',
               textColor: Colors.black,
               color: Colors.lime,
-              onPressed: _signInAnonymously,
+              onPressed: () => _signInAnonymously(context),
             ),
           ],
         ),

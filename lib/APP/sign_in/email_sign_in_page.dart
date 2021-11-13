@@ -3,8 +3,6 @@ import 'package:coffeasy/services/auth.dart';
 import 'package:flutter/material.dart';
 
 class EmailSignInPage extends StatelessWidget {
-  const EmailSignInPage({Key? key, required this.auth}) : super(key: key);
-  final AuthBase auth;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +15,7 @@ class EmailSignInPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Card(
-            child: EmaiLSignInForm(auth: auth),
+            child: EmaiLSignInForm(),
           ),
         ),
       ),

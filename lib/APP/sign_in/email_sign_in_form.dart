@@ -4,6 +4,7 @@ import 'package:coffeasy/APP/sign_in/validators.dart';
 import 'package:coffeasy/common_widgets/form_submit_button.dart';
 import 'package:coffeasy/common_widgets/show_alert_dialog.dart';
 import 'package:coffeasy/services/auth.dart';
+import 'package:coffeasy/services/auth_provider.dart';
 import 'package:flutter/material.dart';
 
 enum EmailSignInFormType { signIn, register }
@@ -12,8 +13,6 @@ enum EmailSignInFormType { signIn, register }
 //enum EmailSignInFormType { signIn, register, forgotPassword }
 
 class EmaiLSignInForm extends StatefulWidget with EmailAndPasswordValidators {
-  EmaiLSignInForm({Key? key, required this.auth}) : super(key: key);
-  final AuthBase auth;
 
   @override
   _EmaiLSignInFormState createState() => _EmaiLSignInFormState();
@@ -47,10 +46,11 @@ class _EmaiLSignInFormState extends State<EmaiLSignInForm> {
     try {
       //Artificial delay to test disabling multiple form submission while waiting for response
       //await Future.delayed(Duration(seconds: 3));
+      final auth = AuthProvider.of(context);
       if (_formType == EmailSignInFormType.signIn) {
-        await widget.auth.signInWithEmailAndPassword(_email, _password);
+        await auth.signInWithEmailAndPassword(_email, _password);
       } else {
-        await widget.auth.createUserWithEmailAndPassword(_email, _password);
+        await auth.createUserWithEmailAndPassword(_email, _password);
       }
       Navigator.pop(context);
     } catch (e) {
