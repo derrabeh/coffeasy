@@ -1,4 +1,5 @@
 import 'package:coffeasy/APP/sign_in/email_sign_in_page.dart';
+import 'package:coffeasy/APP/sign_in/sign_in_manager.dart';
 import 'package:coffeasy/APP/sign_in/sign_in_button.dart';
 import 'package:coffeasy/APP/sign_in/social_sign_in_button.dart';
 import 'package:coffeasy/common_widgets/show_exception_alert_dialog.dart';
@@ -7,13 +8,25 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class SignInPage extends StatefulWidget {
-  @override
-  _SignInPageState createState() => _SignInPageState();
-}
+class SignInPage extends StatelessWidget {
+  const SignInPage({Key? key, required this.manager, required this.isLoading}) : super(key: key);
+  final SignInManager manager;
+  final bool isLoading;
 
-class _SignInPageState extends State<SignInPage> {
-  bool _isLoading = false;
+  static Widget create(BuildContext context){
+    final auth = Provider.of<AuthBase>(context, listen: false);
+    return ChangeNotifierProvider<ValueNotifier<bool>>(
+      create: (_)  => ValueNotifier<bool>(false),
+      child: Consumer<ValueNotifier<bool>>(
+        builder: (_, isLoading, __) => Provider<SignInManager>(
+          create: (_) => SignInManager(auth: auth, isLoading: isLoading),
+          child: Consumer<SignInManager>(
+              builder: (_, manager, __) => SignInPage(manager: manager, isLoading: isLoading.value,)
+          ),
+        ),
+      ),
+    );
+  }
 
   void _showSignInError(BuildContext context, Exception exception) {
     if (exception is FirebaseException &&
@@ -27,26 +40,18 @@ class _SignInPageState extends State<SignInPage> {
 
   Future<void> _signInAnonymously(BuildContext context) async {
     try {
-      setState(() => _isLoading = true);
-      final auth = Provider.of<AuthBase>(context, listen: false);
-      await auth.signInAnonymously();
+      await manager.signInAnonymously();
       //^ a user is created here
     } on Exception catch (e) {
       _showSignInError(context, e);
-    } finally {
-      setState(() => _isLoading = false);
     }
   }
 
   Future<void> _signInGoogle(BuildContext context) async {
     try {
-      setState(() => _isLoading = true);
-      final auth = Provider.of<AuthBase>(context, listen: false);
-      await auth.signInWithGoogle();
+      await manager.signInWithGoogle();
     } on Exception catch (e) {
       _showSignInError(context, e);
-    } finally {
-      setState(() => _isLoading = false);
     }
   }
 
@@ -87,7 +92,7 @@ class _SignInPageState extends State<SignInPage> {
               text: 'Sign in with Google',
               textColor: Colors.black87,
               color: Colors.white,
-              onPressed: _isLoading ? (){} : () => _signInGoogle(context),
+              onPressed: isLoading ? (){} : () => _signInGoogle(context),
               assetName: 'images/google-logo.png',
             ),
             SizedBox(
@@ -98,7 +103,7 @@ class _SignInPageState extends State<SignInPage> {
               text: 'Sign in with email',
               textColor: Colors.white,
               color: Colors.teal,
-              onPressed: _isLoading ? (){} : () => _signInWithEmail(context),
+              onPressed: isLoading ? (){} : () => _signInWithEmail(context),
             ),
             SizedBox(height: 8),
             Text(
@@ -113,7 +118,7 @@ class _SignInPageState extends State<SignInPage> {
               text: 'Go anonymous',
               textColor: Colors.black,
               color: Colors.lime,
-              onPressed: _isLoading ? (){} : () => _signInAnonymously(context),
+              onPressed: isLoading ? (){} : () => _signInAnonymously(context),
             ),
           ],
         ),
@@ -122,7 +127,7 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   Widget _buildHeader() {
-    if (_isLoading) {
+    if (isLoading) {
       return Center(child: CircularProgressIndicator());
     }
     return Text(

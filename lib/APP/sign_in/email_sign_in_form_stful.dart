@@ -6,18 +6,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-enum EmailSignInFormType { signIn, register }
-//enum is similar to a boolean but it carries more meaning
-//if you add a forget PW scren, you can do
-//enum EmailSignInFormType { signIn, register, forgotPassword }
+import 'email_sign_in_model.dart';
 
-class EmaiLSignInForm extends StatefulWidget with EmailAndPasswordValidators {
+class EmaiLSignInFormStful extends StatefulWidget with EmailAndPasswordValidators {
 
   @override
   _EmaiLSignInFormState createState() => _EmaiLSignInFormState();
 }
 
-class _EmaiLSignInFormState extends State<EmaiLSignInForm> {
+class _EmaiLSignInFormState extends State<EmaiLSignInFormStful> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
@@ -45,7 +42,7 @@ class _EmaiLSignInFormState extends State<EmaiLSignInForm> {
     super.dispose();
   }
 
-  void _submit() async {
+  Future<void> _submit() async {
     //print('email: ${_emailController.text}, password: ${_passwordController.text}');
     //should only print once if form submission is disabled while waiting for response
     //print('submit called');
