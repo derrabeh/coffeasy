@@ -1,11 +1,10 @@
-import 'dart:io';
 
 import 'package:coffeasy/APP/sign_in/validators.dart';
 import 'package:coffeasy/common_widgets/form_submit_button.dart';
 import 'package:coffeasy/common_widgets/show_alert_dialog.dart';
 import 'package:coffeasy/services/auth.dart';
-import 'package:coffeasy/services/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 enum EmailSignInFormType { signIn, register }
 //enum is similar to a boolean but it carries more meaning
@@ -46,7 +45,7 @@ class _EmaiLSignInFormState extends State<EmaiLSignInForm> {
     try {
       //Artificial delay to test disabling multiple form submission while waiting for response
       //await Future.delayed(Duration(seconds: 3));
-      final auth = AuthProvider.of(context);
+      final auth = Provider.of<AuthBase>(context, listen: false);
       if (_formType == EmailSignInFormType.signIn) {
         await auth.signInWithEmailAndPassword(_email, _password);
       } else {

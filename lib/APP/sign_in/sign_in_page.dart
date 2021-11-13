@@ -2,14 +2,14 @@ import 'package:coffeasy/APP/sign_in/email_sign_in_page.dart';
 import 'package:coffeasy/APP/sign_in/sign_in_button.dart';
 import 'package:coffeasy/APP/sign_in/social_sign_in_button.dart';
 import 'package:coffeasy/services/auth.dart';
-import 'package:coffeasy/services/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SignInPage extends StatelessWidget {
 
   Future<void> _signInAnonymously(BuildContext context) async {
     try {
-      final auth = AuthProvider.of(context);
+      final auth = Provider.of<AuthBase>(context, listen: false);
       await auth.signInAnonymously();
       //^ a user is created here
     } catch (e) {
@@ -19,7 +19,7 @@ class SignInPage extends StatelessWidget {
 
   Future<void> _signInGoogle(BuildContext context) async {
     try {
-      final auth = AuthProvider.of(context);
+      final auth = Provider.of<AuthBase>(context, listen: false);
       await auth.signInWithGoogle();
     } catch (e) {
       print(e.toString());
