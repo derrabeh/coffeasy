@@ -45,6 +45,19 @@ class MenuPage extends StatelessWidget {
     }
   }
 
+  Future<void> _delete(BuildContext context, MenuItem item) async {
+    try {
+      final db = Provider.of<Database>(context, listen: false);
+      await db.deleteMenuItem(item);
+    } on FirebaseException catch (e) {
+      showExceptionAlertDialog(
+        context,
+        title: 'Delete failed',
+        exception: e,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     //final db = Provider.of<Database>(context, listen: false);
@@ -84,11 +97,20 @@ class MenuPage extends StatelessWidget {
       stream: database.menuItemStream(),
       builder: (context, snapshot) {
         return ListItemsBuilder<MenuItem>(
-            snapshot: snapshot,
-            itemBuilder: (context, item) => MenuItemListTile(
-                  menuItem: item,
-                  onTap: () => EditMenuItemPage.show(context, menuItem: item),
-                ),
+          snapshot: snapshot,
+          itemBuilder: (context, item) => Dismissible(
+            //make sure the key has a unique string like this:
+            key: Key('menuItem-${item.id}'),
+            background: Container(
+              color: Colors.red,
+            ),
+            direction: DismissDirection.endToStart,
+            onDismissed: (direction) => _delete(context, item),
+            child: MenuItemListTile(
+              menuItem: item,
+              onTap: () => EditMenuItemPage.show(context, menuItem: item),
+            ),
+          ),
         );
       },
     );

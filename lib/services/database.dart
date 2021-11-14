@@ -3,7 +3,10 @@ import 'package:coffeasy/services/api_path.dart';
 import 'package:coffeasy/services/firestore_service.dart';
 
 abstract class Database {
+  Future<void> deleteMenuItem(MenuItem item);
+
   Future<void> setMenuItem(MenuItem item);
+
   Stream<List<MenuItem>> menuItemStream();
 }
 
@@ -18,6 +21,7 @@ class FirestoreDatabase implements Database {
   //only one instance of FirestoreService can be called
   final _service = FirestoreService.instance;
 
+  @override
   //single set method for create and update
   //.setData write data regardless if new or existing obj
   Future<void> setMenuItem(MenuItem item) => _service.setData(
@@ -25,11 +29,15 @@ class FirestoreDatabase implements Database {
         data: item.toMap(),
       );
 
+  @override
+  Future<void> deleteMenuItem(MenuItem item) => _service.deleteData(
+        path: APIPath.menuItem(uid, item.id),
+      );
+
+  @override
   //print all docs from firebase collection
   Stream<List<MenuItem>> menuItemStream() => _service.collectionStream(
-    path: APIPath.menuItems(uid),
-    builder: (data, documentId) => MenuItem.fromMap(data, documentId),
-  );
-
-
+        path: APIPath.menuItems(uid),
+        builder: (data, documentId) => MenuItem.fromMap(data, documentId),
+      );
 }
