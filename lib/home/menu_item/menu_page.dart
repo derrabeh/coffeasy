@@ -3,6 +3,7 @@ import 'package:coffeasy/common_widgets/show_alert_dialog.dart';
 import 'package:coffeasy/common_widgets/show_exception_alert_dialog.dart';
 import 'package:coffeasy/home/menu_item/edit_menu_item_page.dart';
 import 'package:coffeasy/home/menu_item/empty_content.dart';
+import 'package:coffeasy/home/menu_item/list_items_builder.dart';
 import 'package:coffeasy/home/menu_item/menu_item_list_tile.dart';
 import 'package:coffeasy/services/auth.dart';
 import 'package:coffeasy/services/database.dart';
@@ -82,27 +83,12 @@ class MenuPage extends StatelessWidget {
     return StreamBuilder<List<MenuItem>>(
       stream: database.menuItemStream(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final items = snapshot.data;
-          //shows if there's menu items
-          if (items!.isNotEmpty) {
-            final children = items!
-                .map((item) => MenuItemListTile(
-                      menuItem: item,
-                      onTap: () =>
-                          EditMenuItemPage.show(context, menuItem: item),
-                    ))
-                .toList();
-            return ListView(children: children);
-          }
-          //shows if nothing in the menu item collection
-          return EmptyContent();
-        }
-        if (snapshot.hasError) {
-          return Center(child: Text('Some error occured'));
-        }
-        return Center(
-          child: CircularProgressIndicator(),
+        return ListItemsBuilder<MenuItem>(
+            snapshot: snapshot,
+            itemBuilder: (context, item) => MenuItemListTile(
+                  menuItem: item,
+                  onTap: () => EditMenuItemPage.show(context, menuItem: item),
+                ),
         );
       },
     );
