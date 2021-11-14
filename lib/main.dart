@@ -21,6 +21,12 @@ class MyApp  extends StatelessWidget {
         title: 'Coffeasy',
         theme: ThemeData(
           primarySwatch: Colors.lightBlue,
+          primaryTextTheme: TextTheme(
+            headline6: TextStyle(color: Colors.white),
+          ),
+          appBarTheme: AppBarTheme(
+            iconTheme: IconThemeData(color: Colors.white),
+          ),
         ),
         home: LandingPage(),
       ),
