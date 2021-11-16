@@ -1,5 +1,6 @@
 import 'package:coffeasy/common_widgets/avatar.dart';
 import 'package:coffeasy/common_widgets/show_alert_dialog.dart';
+import 'package:coffeasy/home/account/shop_activate_page.dart';
 import 'package:coffeasy/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -30,12 +31,17 @@ class AccountPage extends StatelessWidget {
     }
   }
 
+  void _shopActivatePage(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute<void>(
+      builder: (context) => ShopActivatePage(),
+      fullscreenDialog: true,
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     //to access user obj in acc page:
     final auth = Provider.of<AuthBase>(context, listen: false);
-
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Account Settings'),
@@ -56,6 +62,7 @@ class AccountPage extends StatelessWidget {
           child: _buildUserInfo(auth.currentUser!),
         ),
       ),
+      body: _buildContents(context),
     );
   }
 
@@ -71,6 +78,34 @@ class AccountPage extends StatelessWidget {
           ),
         SizedBox(height: 20,),
       ],
+    );
+  }
+
+  Widget _buildContents(BuildContext context) {
+    //the buildContent is private as it is uniquely created
+    //for the sign in page, so it's not reusable and hence
+    //is unnecessary to be public.
+
+    return Padding(
+      padding: EdgeInsets.all(16),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            ListTile(
+              title: Text('Activate Shop'),
+              trailing: Icon(Icons.chevron_right),
+              onTap: () => _shopActivatePage(context),
+            ),
+            ListTile(
+              title: Text('Coffee Pass'),
+              trailing: Icon(Icons.chevron_right),
+              onTap: (){},
+            ),
+          ],
+        ),
+      ),
     );
   }
 
