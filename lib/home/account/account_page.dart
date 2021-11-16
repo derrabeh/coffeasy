@@ -59,10 +59,10 @@ class AccountPage extends StatelessWidget {
     );
   }
 
-  Widget _buildUserInfo(User? user) {
+  Widget _buildUserInfo(User user) {
     return Column(
       children: <Widget> [
-        Avatar(photoUrl: user!.photoURL, radius: 50),
+        Avatar(photoUrl: user.photoURL, radius: 50),
         SizedBox(height: 10,),
         if (user.displayName != null)
           Text(
@@ -73,4 +73,5 @@ class AccountPage extends StatelessWidget {
       ],
     );
   }
+
 }
