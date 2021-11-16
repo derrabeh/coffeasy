@@ -53,7 +53,7 @@ class AccountPage extends StatelessWidget {
         ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(180),
-          child: _buildUserInfo(auth.currentUser),
+          child: _buildUserInfo(auth.currentUser!),
         ),
       ),
     );
@@ -64,7 +64,7 @@ class AccountPage extends StatelessWidget {
       children: <Widget> [
         Avatar(photoUrl: user!.photoURL, radius: 50),
         SizedBox(height: 10,),
-        if (user.displayName != Null)
+        if (user.displayName != null)
           Text(
             user.displayName!,
             style: TextStyle(color: Colors.white),
