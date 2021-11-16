@@ -3,11 +3,13 @@ class Shop {
     required this.id,
     required this.shopName,
     required this.location,
+    required this.isJoinedCoffeePass
   });
 
   final String id;
   final String shopName;
   final String location;
+  final bool isJoinedCoffeePass;
 
   //factory is a constructor that doesn't always create a new instance
   //eg if data==null, then don't return a menu item object
@@ -17,13 +19,15 @@ class Shop {
       throw AssertionError('data must not be null');
     final String shopName = data['shopName'];
     final String location = data['location'];
-    return Shop(id: documentId, shopName: shopName, location: location, );
+    final bool isJoinedCoffeePass = data['isJoinedCoffeePass'];
+    return Shop(id: documentId, shopName: shopName, location: location, isJoinedCoffeePass: isJoinedCoffeePass);
   }
 
   Map<String, dynamic> toMap(){
     return {
       'shopName' : shopName,
       'location' : location,
+      'isJoinedCoffeePass' : isJoinedCoffeePass,
     };
   }
 }

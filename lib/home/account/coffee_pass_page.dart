@@ -7,8 +7,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ShopSetUpPage extends StatefulWidget {
-  const ShopSetUpPage({Key? key, required this.database, this.shop}) : super(key: key);
+class CoffeePassPage extends StatefulWidget {
+  const CoffeePassPage({Key? key, required this.database, this.shop}) : super(key: key);
   final Database database;
   final Shop? shop;
 
@@ -17,17 +17,17 @@ class ShopSetUpPage extends StatefulWidget {
     final database = Provider.of<Database>(context, listen: false);
     //root navigator: true to hide the bottom tab
     await Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-        builder: (context) => ShopSetUpPage(
+        builder: (context) => CoffeePassPage(
           database: database,
         ),
         fullscreenDialog: true));
   }
 
   @override
-  _ShopSetUpPageState createState() => _ShopSetUpPageState();
+  _CoffeePassPageState createState() => _CoffeePassPageState();
 }
 
-class _ShopSetUpPageState extends State<ShopSetUpPage> {
+class _CoffeePassPageState extends State<CoffeePassPage> {
   //to access the state of the form
   final _formKey = GlobalKey<FormState>();
   String? _shopName;
@@ -63,7 +63,7 @@ class _ShopSetUpPageState extends State<ShopSetUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Set up your shop'),
+        title: Text('Coffee Pass Settings'),
         elevation: 2,
       ),
       body: _buildContents(),

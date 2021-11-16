@@ -1,5 +1,6 @@
 import 'package:coffeasy/common_widgets/avatar.dart';
 import 'package:coffeasy/common_widgets/show_alert_dialog.dart';
+import 'package:coffeasy/home/account/coffee_pass_page.dart';
 import 'package:coffeasy/home/account/shop_activate_page.dart';
 import 'package:coffeasy/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -99,9 +100,9 @@ class AccountPage extends StatelessWidget {
               onTap: () => _shopActivatePage(context),
             ),
             ListTile(
-              title: Text('Coffee Pass'),
+              title: Text('Coffee Pass Settings'),
               trailing: Icon(Icons.chevron_right),
-              onTap: (){},
+              onTap: () => CoffeePassPage.show(context),
             ),
           ],
         ),

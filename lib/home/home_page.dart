@@ -1,4 +1,5 @@
 import 'package:coffeasy/home/account/account_page.dart';
+import 'package:coffeasy/home/account/coffee_pass_page.dart';
 import 'package:coffeasy/home/account/shop_activate_page.dart';
 import 'package:coffeasy/home/account/shop_set_up_page.dart';
 import 'package:coffeasy/home/cupertino_home_scaffold.dart';
@@ -26,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   Map<TabItem, WidgetBuilder> get widgetBuilders {
     return {
       TabItem.menuItem: (_) => MenuPage(),
-      TabItem.modifier: (_) => ShopActivatePage(),
+      TabItem.modifier: (_) => MenuPage(),
       TabItem.account: (_) => AccountPage(),
     };
   }
