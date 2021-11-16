@@ -53,18 +53,18 @@ class AccountPage extends StatelessWidget {
         ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(180),
-          child: _buildUserInfo(auth.currentUser),
+          child: _buildUserInfo(auth.currentUser!),
         ),
       ),
     );
   }
 
-  Widget _buildUserInfo(User? user) {
+  Widget _buildUserInfo(User user) {
     return Column(
       children: <Widget> [
-        Avatar(photoUrl: user!.photoURL, radius: 50),
+        Avatar(photoUrl: user.photoURL, radius: 50),
         SizedBox(height: 10,),
-        if (user.displayName != Null)
+        if (user.displayName != null)
           Text(
             user.displayName!,
             style: TextStyle(color: Colors.white),
@@ -73,4 +73,5 @@ class AccountPage extends StatelessWidget {
       ],
     );
   }
+
 }
