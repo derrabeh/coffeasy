@@ -12,27 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:coffeasy/home/models/menu_item.dart';
 
 class MenuPage extends StatelessWidget {
-  Future<void> _signOut(BuildContext context) async {
-    try {
-      final auth = Provider.of<AuthBase>(context, listen: false);
-      await auth.signOut();
-    } catch (e) {
-      print(e.toString());
-    }
-  }
 
-  Future<void> _confirmSignOut(BuildContext context) async {
-    final didRequestSignOut = await showAlertDialog(
-          context,
-          title: 'Logout',
-          content: 'Are you sure you want to log out?',
-          defaultActionText: 'Logout',
-        ) ??
-        false;
-    if (didRequestSignOut == true) {
-      _signOut(context);
-    }
-  }
 
   // NO LONGER NEEDED
   Future<void> _createMenuItem(BuildContext context) async {
@@ -64,30 +44,15 @@ class MenuPage extends StatelessWidget {
     //db.menuItemStream();
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Your Menu',
-        ),
+        title: Text('Your Menu'),
         actions: <Widget>[
-          TextButton(
-            onPressed: () => _confirmSignOut(context),
-            child: Text(
-              'Log out',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.white,
-              ),
-            ),
+          IconButton(
+            icon: Icon(Icons.add, color: Colors.white,),
+            onPressed: () => EditMenuItemPage.show(context),
           ),
         ],
       ),
       body: _buildContents(context),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-        onPressed: () => EditMenuItemPage.show(context),
-      ),
     );
   }
 

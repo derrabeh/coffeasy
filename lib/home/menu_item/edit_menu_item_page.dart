@@ -20,7 +20,8 @@ class EditMenuItemPage extends StatefulWidget {
   //show this page when the + button is pressed
   static Future<void> show(BuildContext context, {MenuItem? menuItem}) async {
     final database = Provider.of<Database>(context, listen: false);
-    await Navigator.of(context).push(MaterialPageRoute(
+    //root navigator: true to hide the bottom tab for EditMenuPage
+    await Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
         builder: (context) => EditMenuItemPage(
               database: database,
               menuItem: menuItem,
