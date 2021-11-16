@@ -1,5 +1,7 @@
+import 'package:coffeasy/common_widgets/avatar.dart';
 import 'package:coffeasy/common_widgets/show_alert_dialog.dart';
 import 'package:coffeasy/services/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -30,9 +32,13 @@ class AccountPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //to access user obj in acc page:
+    final auth = Provider.of<AuthBase>(context, listen: false);
+
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Shop Settings'),
+        title: Text('Account Settings'),
         actions: <Widget>[
           TextButton(
             onPressed: () => _confirmSignOut(context),
@@ -45,7 +51,26 @@ class AccountPage extends StatelessWidget {
             ),
           ),
         ],
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(180),
+          child: _buildUserInfo(auth.currentUser),
+        ),
       ),
+    );
+  }
+
+  Widget _buildUserInfo(User? user) {
+    return Column(
+      children: <Widget> [
+        Avatar(photoUrl: user!.photoURL, radius: 50),
+        SizedBox(height: 10,),
+        if (user.displayName != Null)
+          Text(
+            user.displayName!,
+            style: TextStyle(color: Colors.white),
+          ),
+        SizedBox(height: 20,),
+      ],
     );
   }
 }
