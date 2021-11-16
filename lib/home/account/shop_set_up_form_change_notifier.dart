@@ -1,6 +1,6 @@
-import 'package:coffeasy/APP/sign_in/email_sign_in_change_model.dart';
 import 'package:coffeasy/common_widgets/form_submit_button.dart';
 import 'package:coffeasy/common_widgets/show_exception_alert_dialog.dart';
+import 'package:coffeasy/home/account/shop_set_up_change_model.dart';
 import 'package:coffeasy/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,13 +8,13 @@ import 'package:provider/provider.dart';
 
 class ShopSetUpFormChangeNotifier extends StatefulWidget {
   ShopSetUpFormChangeNotifier({required this.model});
-  final EmailSignInChangeModel model;
+  final ShopSetUpChangeModel model;
 
   static Widget create(BuildContext context) {
     final auth = Provider.of<AuthBase>(context, listen: false);
-    return ChangeNotifierProvider<EmailSignInChangeModel>(
-      create: (_) => EmailSignInChangeModel(auth: auth),
-      child: Consumer<EmailSignInChangeModel>(
+    return ChangeNotifierProvider<ShopSetUpChangeModel>(
+      create: (_) => ShopSetUpChangeModel(auth: auth),
+      child: Consumer<ShopSetUpChangeModel>(
         builder: (_, model, __) => ShopSetUpFormChangeNotifier(model: model),
       ),
     );
@@ -31,7 +31,7 @@ class _ShopSetUpFormChangeNotifierState extends State<ShopSetUpFormChangeNotifie
   final FocusNode _shopNameFocusNode = FocusNode();
   final FocusNode _locationFocusNode = FocusNode();
 
-  EmailSignInChangeModel get model => widget.model;
+  ShopSetUpChangeModel get model => widget.model;
 
   //called when a widget is removed from the widget tree
   @override
@@ -65,7 +65,7 @@ class _ShopSetUpFormChangeNotifierState extends State<ShopSetUpFormChangeNotifie
   //if email is invalid, focus stays on email
   void _shopNameEditingComplete() {
     //TODO: change to shop name validator
-    final newFocus = model.emailValidator.isValid(model.email)
+    final newFocus = model.shopNameValidator.isValid(model.shopName)
         ? _locationFocusNode
         : _shopNameFocusNode;
     FocusScope.of(context).requestFocus(newFocus);
@@ -103,12 +103,12 @@ class _ShopSetUpFormChangeNotifierState extends State<ShopSetUpFormChangeNotifie
       decoration: InputDecoration(
         labelText: 'Location',
         hintText: 'The pickup location of your establishment',
-        errorText: model.passwordErrorText,
+        errorText: model.locationErrorText,
         enabled: model.isLoading == false,
       ),
       textInputAction: TextInputAction.done,
       obscureText: true,
-      onChanged: (password) => model.updateWith(password: password),
+      //onChanged: (password) => model.updateWith(password: password),
       onEditingComplete: _submit,
     );
   }
@@ -119,13 +119,13 @@ class _ShopSetUpFormChangeNotifierState extends State<ShopSetUpFormChangeNotifie
       focusNode: _shopNameFocusNode,
       decoration: InputDecoration(
         labelText: 'Shop Name',
-        errorText: model.emailErrorText,
+        errorText: model.shopNameErrorText,
         enabled: model.isLoading == false,
       ),
       autocorrect: false,
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
-      onChanged: (email) => model.updateWith(email: email),
+      //onChanged: (email) => model.updateWith(email: email),
       onEditingComplete: () => _shopNameEditingComplete(),
       //print in console the input
       //onChanged: (value) => print(value)

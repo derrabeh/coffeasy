@@ -22,6 +22,14 @@ abstract class TextFieldValidator {
   String errorHint(String input);
 }
 
+class ShopSetUpValidators{
+  final StringValidator shopNameValidator = NonEmptyStringValidator();
+  final StringValidator locationValidator = NonEmptyStringValidator();
+  final String invalidShopNameErrorText = 'Shop name can\'t be empty';
+  final String invalidLocationErrorText = 'Location can\'t be empty';
+}
+
+//NOT USED
 class EmailValidator implements TextFieldValidator {
   @override
   String errorHint(String input) {
@@ -34,6 +42,7 @@ class EmailValidator implements TextFieldValidator {
   }
 }
 
+//NOT USED
 class PasswordValidator implements TextFieldValidator{
   @override
   String errorHint(String input){
