@@ -1,13 +1,13 @@
 import 'package:coffeasy/home/models/menu_item.dart';
+import 'package:coffeasy/home/models/shop.dart';
 import 'package:coffeasy/services/api_path.dart';
 import 'package:coffeasy/services/firestore_service.dart';
 
 abstract class Database {
   Future<void> deleteMenuItem(MenuItem item);
-
   Future<void> setMenuItem(MenuItem item);
-
   Stream<List<MenuItem>> menuItemStream();
+  Future<void> setShop(Shop shop);
 }
 
 //returns the current dateTime in String format,
@@ -40,4 +40,12 @@ class FirestoreDatabase implements Database {
         path: APIPath.menuItems(uid),
         builder: (data, documentId) => MenuItem.fromMap(data, documentId),
       );
+
+  @override
+  Future<void> setShop(Shop shop) => _service.setData(
+    path: APIPath.shop(uid, shop.id),
+    data: shop.toMap(),
+  );
+
+
 }
