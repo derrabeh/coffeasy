@@ -1,14 +1,17 @@
 # coffeasy
 
-Features of this app: 
+Features of this app (Completed): 
 
-   1. Support for Android 
-   2. Google Sign-In using Google API
-   3. User authentication using Firebase
+   1. Separation of business logic in models and providers, and UI in a separate folder structure
+   2. Google Sign-In using Firebase Authentication services
+   3. Anonymous user authentication using Firebase Authentication services 
    4. Use of provider for app state management
-   5. Separation of business logic in models and providers, and UI in a separate folder structure
-   6. Simple widget framework for handling 4 state of UI, eg.: loading, data, empty, error
-   7. 
+   5. Simple widget framework for handling 4 state of UI, eg.: loading, data, empty, error
+
+Features of this app (Doing): 
+   1. Sign in using phone number with OTP
+   2. Location autocomplete function using Google Places API
+   3. Maps view function using Google Maps SDK
 
 To run this app: 
 
@@ -19,5 +22,5 @@ To run this app:
     
 Remark: 
 
-   This app is developed with flutter version 2.2.3 and have not been tested on latest version.
+   This app is developed with flutter version 2.2.3 
  
